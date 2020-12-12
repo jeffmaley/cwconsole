@@ -1,5 +1,8 @@
 import sys
 import boto3
+import datetime
+
+epoch = datetime.datetime(1970, 1, 1, 0, 0, 0, 0)
 
 class bcolors:
     HEADER = '\033[95m'
@@ -14,9 +17,14 @@ class bcolors:
     RESET = '\033[0m'
 
 def filter_logs(log_group):
+    base_delta = datetime.datetime.now() - epoch
+    ms_from_epoch = int(base_delta.total_seconds()) * 1000
+    five_seconds_ago = ms_from_epoch - 5000
     cwclient = boto3.client('logs')
     response = cwclient.filter_log_events(
-        logGroupName=log_group
+        logGroupName=log_group,
+        startTime=five_seconds_ago,
+        endTime=ms_from_epoch
     )
     return response
 
@@ -31,9 +39,9 @@ def print_logs(log_entries):
     return
 
 def main():
-    log_entries = filter_logs(sys.argv[1])
-    print_logs(log_entries)
-    #print(f"log_entries: {log_entries}")
+    while 1:
+        log_entries = filter_logs(sys.argv[1])
+        print_logs(log_entries)
     return
 
 if __name__ == "__main__":
