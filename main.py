@@ -1,6 +1,7 @@
 import sys
 import boto3
 import datetime
+import time
 
 epoch = datetime.datetime(1970, 1, 1, 0, 0, 0, 0)
 
@@ -34,7 +35,7 @@ def print_logs(log_entries):
             if key == 'logStreamName':
                 print(f"{bcolors.UNDERLINE}{bcolors.BOLD}{event[key]}{bcolors.RESET}")
             else:
-                print(f"{bcolors.HEADER}{key}: {bcolors.OKGREEN}{event[key]}")
+                print(f"{bcolors.HEADER}{key}: {bcolors.OKGREEN}{event[key]}{bcolors.RESET}")
     print(f"{bcolors.RESET}End of output")
     return
 
@@ -42,6 +43,7 @@ def main():
     while 1:
         log_entries = filter_logs(sys.argv[1])
         print_logs(log_entries)
+        time.sleep(5)
     return
 
 if __name__ == "__main__":
