@@ -33,7 +33,7 @@ def filter_logs(log_group, search_strings):
             logGroupName=log_group,
             startTime=five_seconds_ago,
             endTime=ms_from_epoch,
-            filterPattern=search_strings
+            filterPattern=f"{search_strings}"
         )
     except Exception as e:
         print(f"Error with: {log_group}. {e}")
@@ -57,7 +57,7 @@ def main():
     search_strings_raw = input("Enter search strings: ").split(' ')
     search_strings = ''
     for string in search_strings_raw:
-        search_strings = f"{search_strings} ?{string}"
+        search_strings = f"{search_strings} {string}"
     print(f"Log groups: {log_groups}")
     print(f"Search strings: {search_strings}")
     while 1:
